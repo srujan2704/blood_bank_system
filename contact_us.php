@@ -8,8 +8,8 @@ if (isset($_POST["send"])) {
 
     $conn = mysqli_connect("localhost", "root", "", "blood_donation") or die("Connection error");
 
-    $sql = "INSERT INTO contact_query (query_name, query_mail, query_number, query_message)
-            VALUES ('$name', '$email', '$number', '$message')";
+    $sql = "INSERT INTO contact_query (query_name, query_mail, query_number, query_message, query_status)
+            VALUES ('$name', '$email', '$number', '$message', '2')";
 
     $result = mysqli_query($conn, $sql) or die("Query unsuccessful: " . mysqli_error($conn));
 
@@ -30,7 +30,7 @@ if (isset($_POST["send"])) {
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    header("Location: home.php");
+    
 </head>
 
 <body>

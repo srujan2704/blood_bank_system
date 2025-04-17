@@ -62,11 +62,13 @@ include 'conn.php';
         {
             document.getElementById("demo").innerHTML = "Read";
             <?php
-            echo '<div class="alert alert-info alert_dismissible"><b><button type="button" class="close" data-dismiss="alert">&times;</button></b><b>Pending Request "Read".</b></div>';
+            if(isset($_GET['id'])) {
+              echo '<div class="alert alert-info alert_dismissible"><b><button type="button" class="close" data-dismiss="alert">&times;</button></b><b>Pending Request "Read".</b></div>';
 
-            $que_id = $_GET['id'];
-             $sql1="update contact_query set query_status='1' where  query_id={$que_id}";
+              $que_id = $_GET['id'];
+              $sql1="update contact_query set query_status='1' where query_id={$que_id}";
               $result=mysqli_query($conn,$sql1);
+            }
             ?>
         }
       }
@@ -86,7 +88,7 @@ include 'conn.php';
           }
           $offset = ($page - 1) * $limit;
           $count=$offset+1;
-        $sql= " select * from contact_query where query_status>1 LIMIT {$offset},{$limit}";
+        $sql= "SELECT * FROM contact_query WHERE query_status=2 OR query_status IS NULL ORDER BY query_date DESC LIMIT {$offset},{$limit}";
         $result=mysqli_query($conn,$sql);
         if(mysqli_num_rows($result)>0)   {
        ?>
@@ -114,29 +116,22 @@ include 'conn.php';
                   <td><?php echo $row['query_number']; ?></td>
                   <td><?php echo $row['query_message']; ?></td>
                   <td><?php echo $row['query_date']; ?></td>
-                  <?php if($row['query_status']==1)
-{
-?><td>Read<br></td>
-<?php } else {?>
-
-<td><a href="query.php?id=<?php echo $row['query_id'];?>" onclick="clickme()"><b id="demo">Pending</b></a><br>
-
-
-</td>
-<?php } ?>
-                    <td id="he" style="width:100px">
+                  <td><a href="pending_query.php?id=<?php echo $row['query_id'];?>" onclick="clickme()"><b id="demo">Pending</b></a></td>
+                  <td id="he" style="width:100px">
                     <a style="background-color:aqua" href='delete_query.php?id=<?php echo $row['query_id']; ?>'> Delete </a>
-                </td>
+                  </td>
               </tr>
             <?php } ?>
           </tbody>
       </table>
     </div>
+    <?php } else { ?>
+      <div class="alert alert-info">No pending queries found.</div>
     <?php } ?>
 
     <div class="table-responsive"style="text-align:center;align:center">
         <?php
-        $sql1 = "SELECT * FROM contact_query";
+        $sql1 = "SELECT * FROM contact_query WHERE query_status=2 OR query_status IS NULL";
         $result1 = mysqli_query($conn, $sql1) or die("Query Failed.");
 
         if(mysqli_num_rows($result1) > 0){
@@ -147,7 +142,7 @@ include 'conn.php';
 
           echo '<ul class="pagination admin-pagination">';
           if($page > 1){
-            echo '<li><a href="query.php?page='.($page - 1).'">Prev</a></li>';
+            echo '<li><a href="pending_query.php?page='.($page - 1).'">Prev</a></li>';
           }
           for($i = 1; $i <= $total_page; $i++){
             if($i == $page){
@@ -155,10 +150,10 @@ include 'conn.php';
             }else{
               $active = "";
             }
-            echo '<li class="'.$active.'"><a href="query.php?page='.$i.'">'.$i.'</a></li>';
+            echo '<li class="'.$active.'"><a href="pending_query.php?page='.$i.'">'.$i.'</a></li>';
           }
           if($total_page > $page){
-            echo '<li><a href="query.php.php?page='.($page + 1).'">Next</a></li>';
+            echo '<li><a href="pending_query.php?page='.($page + 1).'">Next</a></li>';
           }
 
           echo '</ul>';
