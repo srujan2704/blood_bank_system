@@ -114,7 +114,7 @@ include 'sidebar.php'; ?>
                 <div class="panel-body panel-info bk-primary text-light" style="background-color:#E8DAEF ;border-radius:50px; ">
                   <div class="stat-panel text-center">
                     <?php
-                      $sql2 ="SELECT * from contact_query where query_status=2 ";
+                      $sql2 ="SELECT * from contact_query where query_status=2 OR query_status IS NULL";
                       $result2=mysqli_query($conn,$sql2) or die("query failed.");
                       $row2=mysqli_num_rows($result2);
 

@@ -58,22 +58,37 @@ include 'conn.php';
       <hr>
       <script>
       function clickme(){
-        if(confirm("Do you really Want to Read ?"))
+        if(confirm("Do you really Want to Mark as Read?"))
         {
             document.getElementById("demo").innerHTML = "Read";
             <?php
-            echo '<div class="alert alert-info alert_dismissible"><b><button type="button" class="close" data-dismiss="alert">&times;</button></b><b>Pending Request "Read".</b></div>';
-
-            $que_id = $_GET['id'];
-             $sql1="update contact_query set query_status='1' where  query_id={$que_id}";
+            if(isset($_GET['id'])) {
+              $que_id = $_GET['id'];
+              $sql1="update contact_query set query_status='1' where query_id={$que_id}";
               $result=mysqli_query($conn,$sql1);
+              
+              if($result) {
+                echo 'window.location.href = "query.php";';
+              }
+            }
             ?>
+            return true;
         }
+        return false;
       }
-
       </script>
 
-
+      <?php
+      if(isset($_GET['id']) && isset($_GET['read'])) {
+        $que_id = $_GET['id'];
+        $sql1="update contact_query set query_status='1' where query_id={$que_id}";
+        $result=mysqli_query($conn,$sql1);
+        
+        if($result) {
+          echo '<div class="alert alert-success alert_dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button><b>Query marked as read successfully.</b></div>';
+        }
+      }
+      ?>
 
       <?php
         include 'conn.php';
@@ -86,7 +101,7 @@ include 'conn.php';
           }
           $offset = ($page - 1) * $limit;
           $count=$offset+1;
-        $sql= "select * from contact_query LIMIT {$offset},{$limit}";
+        $sql= "SELECT * FROM contact_query ORDER BY query_date DESC LIMIT {$offset},{$limit}";
         $result=mysqli_query($conn,$sql);
         if(mysqli_num_rows($result)>0)   {
        ?>
@@ -107,31 +122,31 @@ include 'conn.php';
             <?php
             while($row = mysqli_fetch_assoc($result)) { ?>
           <tr>
-
                   <td><?php echo $count++; ?></td>
                   <td><?php echo $row['query_name']; ?></td>
                   <td><?php echo $row['query_mail']; ?></td>
                   <td><?php echo $row['query_number']; ?></td>
                   <td><?php echo $row['query_message']; ?></td>
                   <td><?php echo $row['query_date']; ?></td>
-                  <?php if($row['query_status']==1)
-{
-?><td>Read<br></td>
-<?php } else {?>
-
-<td><a href="query.php?id=<?php echo $row['query_id'];?>" onclick="clickme()"><b id="demo">Pending</b></a><br>
-
-
-</td>
-<?php } ?>
-                    <td id="he" style="width:100px">
+                  <?php if(isset($row['query_status']) && $row['query_status']==1) { ?>
+                    <td><span class="label label-success">Read</span></td>
+                  <?php } else { ?>
+                    <td>
+                      <a href="query.php?id=<?php echo $row['query_id'];?>&read=true" class="label label-warning">
+                        Pending
+                      </a>
+                    </td>
+                  <?php } ?>
+                  <td id="he" style="width:100px">
                     <a style="background-color:aqua" href='delete_query.php?id=<?php echo $row['query_id']; ?>'> Delete </a>
-                </td>
+                  </td>
               </tr>
             <?php } ?>
           </tbody>
       </table>
     </div>
+    <?php } else { ?>
+      <div class="alert alert-info">No queries found.</div>
     <?php } ?>
 
     <div class="table-responsive"style="text-align:center;align:center">
@@ -158,7 +173,7 @@ include 'conn.php';
             echo '<li class="'.$active.'"><a href="query.php?page='.$i.'">'.$i.'</a></li>';
           }
           if($total_page > $page){
-            echo '<li><a href="query.php.php?page='.($page + 1).'">Next</a></li>';
+            echo '<li><a href="query.php?page='.($page + 1).'">Next</a></li>';
           }
 
           echo '</ul>';

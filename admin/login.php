@@ -8,7 +8,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script></head>
-<body background="admin_image\blood-cells.jpg">
+<body style="background-image: url('admin_image/back.jpg'); background-size: cover; background-position: center;">
 
 
   <form class="" action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
@@ -16,14 +16,14 @@
     <div class="container" style="margin-top:200px;">
       <div class="row justify-content-center">
           <div class="col-lg-6">
-              <h1 class="mt-4 mb-3" style="color:#D2F015 ;">
+          <h1 class="mt-4 mb-3" style="color:black; font-weight:bold; font:30px;">
                   Blood Bank & Management
                   <br>Admin Login Portal
                 </h1>
 
             </div>
       </div>
-      <div class="card" style="height:250px; background-image:url('admin_image/glossy1.jpg');">
+      <div class="card" style="height:0px; background-image:url('admin_image/glossy.jpg');">
           <div class="card-body">
 
       <div class="row justify-content-lg-center justify-content-mb-center" >
